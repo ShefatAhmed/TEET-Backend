@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import httpStatus from "http-status";
 import mongoose from "mongoose";
 import { TUser } from "./user.interface";
@@ -7,8 +8,10 @@ import { Customer } from "../Customer/customer.model";
 import AppError from "../../errors/AppError";
 
 const createCustomerIntoDB = async (password: string, payload: TCustomer) => {
+  const hashedPassword = await bcrypt.hash(password || "123456abcd", 10);
+
   const userData: Partial<TUser> = {
-    password: password || "123456abcd",
+    password: hashedPassword,
     role: "customer",
     email: payload.email,
   };
@@ -38,7 +41,7 @@ const createCustomerIntoDB = async (password: string, payload: TCustomer) => {
     return newCustomer;
   } catch (err) {
     await session.abortTransaction();
-    await session.endSession(); 
+    await session.endSession();
     throw new Error(err as string);
   }
 };

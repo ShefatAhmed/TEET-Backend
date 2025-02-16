@@ -7,6 +7,8 @@ export type TUserName = {
 };
 
 export type TCustomer = {
+  [x: string]: import("mongoose").Schema.Types.ObjectId;
+  payload: import("mongoose").Schema.Types.ObjectId;
   user: Types.ObjectId;
   name: TUserName;
   email: string;
